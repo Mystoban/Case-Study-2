@@ -10,8 +10,11 @@ import { useHotkeys, useLocalStorage, useViewportSize } from "@mantine/hooks";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { NavbarContainer, HeaderContainer, CreateDocument } from "./Components";
 import { useSelector } from "react-redux";
-import Masterlist from "./Pages/Masterlist";
-import { Auth, Events, Home, Documents, Report } from "./Pages";
+import ResidentList from "./Pages/Masterlist";
+import { Auth, Events, Home, Documents, Logs } from "./Pages";
+import 'leaflet/dist/leaflet.css';
+import ResidentDetails from './Pages/ResidentDetails';
+import ResidentPublicView from './Pages/ResidentPublicView';
 
 import {
   Abroad,
@@ -86,8 +89,7 @@ import {
 } from "./BrgyFilesDirect/indexDirect";
 
 function App() {
-  // const User = useSelector((state) => state.user.loginStatus);
-  const [User, setUser] = useState(true);
+  const User = useSelector((state) => state.user.loginStatus);
   const { width } = useViewportSize();
   const show = useSelector((state) => state.navbar.show);
 
@@ -112,28 +114,69 @@ function App() {
 
   const theme = {
     colorScheme,
-    spacing: { xxs: 4, xs: 8, sm: 12, md: 16, lg: 24, xl: 32, xxl: 64 },
+    primaryColor: 'green',
+    defaultRadius: 'md',
     colors: {
-      darktheme: [
-        "#00897B",
-        "#05181C",
-        "#0E1B23",
-        "#060D12",
-        "#78919C",
-        "#14252F",
-        "#587583",
-        "#314792",
-        "#B64834",
+      dark: [
+        '#C1C2C5',
+        '#A6A7AB',
+        '#909296',
+        '#5C5F66',
+        '#373A40',
+        '#2C2E33',
+        '#25262B',
+        '#1A1B1E',
+        '#141517',
+        '#101113',
       ],
-      lighttheme: [
-        "#FFFFFF",
-        "#E0F2F1",
-        "#ECEFF1",
-        "#607D8B",
-        "#212121",
-        "#6D81C1",
-        "#CF8071",
+      green: [
+        '#E8F5E9',
+        '#C8E6C9',
+        '#A5D6A7',
+        '#81C784',
+        '#66BB6A',
+        '#4CAF50',
+        '#43A047',
+        '#388E3C',
+        '#2E7D32',
+        '#1B5E20',
       ],
+      gray: [
+        '#F8F9FA',
+        '#F1F3F5',
+        '#E9ECEF',
+        '#DEE2E6',
+        '#CED4DA',
+        '#ADB5BD',
+        '#868E96',
+        '#495057',
+        '#343A40',
+        '#212529',
+      ],
+    },
+    components: {
+      Paper: {
+        styles: (theme) => ({
+          root: {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
+            boxShadow: theme.colorScheme === 'dark' 
+              ? '0 2px 8px rgba(0, 0, 0, 0.3)' 
+              : '0 2px 8px rgba(46, 125, 50, 0.1)',
+          },
+        }),
+      },
+      Container: {
+        styles: (theme) => ({
+          root: {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+          },
+        }),
+      },
+    },
+    other: {
+      backgroundColor: colorScheme === 'dark' ? '#1A1B1E' : '#FFFFFF',
+      paperBackgroundColor: colorScheme === 'dark' ? '#25262B' : '#FFFFFF',
+      borderColor: colorScheme === 'dark' ? '#2C2E33' : '#E9ECEF',
     },
   };
 
@@ -151,12 +194,12 @@ function App() {
       element: <Documents />,
     },
     {
-      path: "masterlist",
-      element: <Masterlist colorScheme={colorScheme} />,
+      path: "residentlist",
+      element: <ResidentList colorScheme={colorScheme} />,
     },
     {
-      path: "report",
-      element: <Report colorScheme={colorScheme} />,
+      path: "logs",
+      element: <Logs colorScheme={colorScheme} />,
     },
     {
       path: "/createdocument",
@@ -429,7 +472,15 @@ function App() {
     {
       path: "/SoloParentDirect",
       element: <SoloParentDirect />,
-    }
+    },
+    {
+      path: "/resident/:id",
+      element: <ResidentDetails />,
+    },
+    {
+      path: "/public/resident/:id",
+      element: <ResidentPublicView />,
+    },
   ];
 
   return (
@@ -439,43 +490,51 @@ function App() {
     >
       <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
         <NotificationsProvider position="bottom-left">
-          {User ? (
-            <AppShell
-              styles={{
-                main: {
-                  background:
-                    theme.colorScheme === "dark"
-                      ? theme.colors.darktheme[2]
-                      : theme.colors.lighttheme[1],
-                },
-              }}
-              navbarOffsetBreakpoint="sm"
-              navbar={<NavbarContainer />}
-              header={<HeaderContainer />}
-            >
-              <Group
-                sx={(theme) => ({
-                  background:
-                    theme.colorScheme === "dark"
-                      ? theme.colors.darktheme[2]
-                      : theme.colors.lighttheme[2],
-                  padding: `0 0.5rem`,
-                  marginTop: `5.5rem`,
-                  width: `${show && width > 765 ? `auto` : `100%`}`,
-                  marginLeft: `${show && width > 765 ? `265px` : `none`}`,
-                })}
-              >
-                <ScrollToTop />
-                <Routes>
-                  {RoutesNavigation.map(({ path, element }, index) => (
-                    <Route key={index} path={path} element={element} />
-                  ))}
-                </Routes>
-              </Group>
-            </AppShell>
-          ) : (
-            <Auth />
-          )}
+          <Routes>
+            {/* Public route for QR code viewing */}
+            <Route path="/public/resident/:id" element={<ResidentPublicView />} />
+            {RoutesNavigation.map(({ path, element }, index) => (
+              <Route
+                key={index}
+                path={path}
+                element={
+                  User ? (
+                    <AppShell
+                      styles={{
+                        main: {
+                          background:
+                            theme.colorScheme === "dark"
+                              ? theme.colors.dark[7]
+                              : theme.colors.gray[0],
+                        },
+                      }}
+                      navbarOffsetBreakpoint="sm"
+                      navbar={width >= 768 && show && <NavbarContainer />}
+                      header={<HeaderContainer />}
+                    >
+                      <Group
+                        sx={(theme) => ({
+                          background:
+                            theme.colorScheme === "dark"
+                              ? theme.colors.dark[7]
+                              : theme.colors.gray[0],
+                          padding: `0 0.5rem`,
+                          marginTop: `5.5rem`,
+                          width: `${show && width > 765 ? `auto` : `100%`}`,
+                          marginLeft: `${show && width > 765 ? `265px` : `none`}`,
+                        })}
+                      >
+                        <ScrollToTop />
+                        {element}
+                      </Group>
+                    </AppShell>
+                  ) : (
+                    <Auth />
+                  )
+                }
+              />
+            ))}
+          </Routes>
         </NotificationsProvider>
       </MantineProvider>
     </ColorSchemeProvider>

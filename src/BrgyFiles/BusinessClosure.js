@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
@@ -22,8 +22,8 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     background:
       theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+        ? theme.colors.dark[7]
+        : theme.white,
     borderRadius: `20px`,
     display: "flex",
     flexDirection: "column",
@@ -264,7 +264,7 @@ const MyDocuments = ({
                     {singleperson?.citizenship}
                   </Text>{" "}
                   Citizen, a resident of <Text>{singleperson?.address}</Text>,
-                  Brgy. Luna, Surigao City, owner of{" "}
+                  Brgy. Luna, Iligan City, owner of{" "}
                   <Text transform="uppercase" style={styles.textregular}>
                     {BusinessName}
                   </Text>{" "}
@@ -294,8 +294,7 @@ const MyDocuments = ({
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>
@@ -325,7 +324,7 @@ const DataFillOut = ({
         style={styles.textinputs}
         label="Business Location"
         radius="sm"
-        placeholder="ex. Bernadette Village, Brgy. Luna, Surigao City"
+        placeholder="ex. Bernadette Village, Brgy. Luna, Iligan City"
         onChange={(e) => setBusinessLocation(e.currentTarget.value)}
       />
       <TextInput

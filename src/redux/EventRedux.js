@@ -19,7 +19,7 @@ const EventReducer = createSlice({
       state.events = [];
     },
     deleteEvent: (state, action) => {
-       state.events = state.events.filter((item)=> item.title !== action.payload);
+      state.events = state.events.filter((item) => item._id !== action.payload);
     },
   },
 });

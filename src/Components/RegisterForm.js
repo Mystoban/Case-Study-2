@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import { showNotification } from "@mantine/notifications";
 import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import {
   addResidentStart,
   addResidentSuccess,
   addResidentsFailed,
 } from "../redux/MasterlistRedux";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
-import { publicRequest } from "../RequestMethod";
-import { storage } from "../firebase";
+import { userRequest } from "../RequestMethod";
 import { DatePicker } from "@mantine/dates";
 
 import {
@@ -27,6 +20,14 @@ import {
   Loader,
 } from "@mantine/core";
 import { FileUpload } from "tabler-icons-react";
+import {
+  sexdata,
+  civilStatus,
+  selection,
+  housestatus,
+  areas
+} from "./Data";
+
 const useStyles = createStyles((theme) => ({
   formcontainer: {
     width: "100%",
@@ -81,7 +82,7 @@ const RegisterForm = () => {
     setForm({ ...Form, [names]: values });
   };
 
-  const [address, setaddress] = useState("Purok 1, Payawan 1");
+  const [address, setaddress] = useState("Purok 1, Sitio 1");
   const [birthdate, setbirthdate] = useState("");
   const [sex, setsex] = useState("Male");
   const [civilstatus, setcivilstatus] = useState("Single");
@@ -95,7 +96,7 @@ const RegisterForm = () => {
       ImageNotifyValidator && setImageNotifyValidator(true);
       ImageFile && setImageFile(ImageFile);
     } else {
-      if (e.target.files[0].type === "image/jpeg") {
+      if (e.target.files[0].type === "image/jpeg" || e.target.files[0].type === "image/png") {
         setImageFile(e.target.files[0]);
         setImagename(e.target.files[0].name);
         setImageNotifyValidator(false);
@@ -105,7 +106,6 @@ const RegisterForm = () => {
           title: "Not Image Type",
           message: "You inputted a non-image type! 🤥",
         });
-
         setImageFile(null);
         setImageNotifyValidator(true);
         setImagename("Not an image type!");
@@ -114,58 +114,7 @@ const RegisterForm = () => {
     }
   };
 
-  const sexdata = ["Male", "Female"];
-
-  const civilStatus = ["Single", "Married", "Divorced", "Widow", "Separated"];
-
-  const selection = ["Yes", "No"];
-
-  const housestatus = ["House Owner", "Renter", "Sharer"];
-
-  const areas = [
-    "Purok 1, Payawan 1",
-    "Purok 2, Payawan 1",
-    "Purok 3, Payawan 1",
-    "Purok 4, Payawan 1",
-    "Purok 5, Payawan 1",
-    "Purok 6, Payawan 2",
-    "Purok 7, Payawan 2",
-    "Purok 8, Payawan 2",
-    "Purok 9 Ilang-Ilang, Payawan 2",
-    "Purok 10 Springville A, Payawan 2",
-    "Purok 11 Springville B, Payawan 2",
-    "Purok 11 Springville C, Payawan 2",
-    "Purok 12 Macresia/Greens Homes, Payawan 2",
-    "Purok 34 Muslim Community, Payawan 2",
-    "Purok 5, Bernadette",
-    "Purok 14, Bernadette",
-    "Purok 15, Bernadette",
-    "Purok 16, Bernadette",
-    "Purok 20, Bernadette",
-    "Purok 17 Poblacion 2, CentralPoblacion",
-    "Purok 18 Rivcor Poblacion, CentralPoblacion",
-    "Purok 19 Tuazon Village, CentralPoblacion",
-    "Purok 20 Poblacion 3, CentralPoblacion",
-    "Purok 21 Airport Riverside, CentralPoblacion",
-    "Purok 22 Holy Cross/Nembusco, CentralPoblacion",
-    "Purok 23, Looc",
-    "Purok 24, Looc",
-    "Purok 24-A, Looc",
-    "Purok 25 Magbago, Looc",
-    "Purok 26 GK/EXIT, Looc",
-    "Purok 27, Toril",
-    "Purok 27-A, Toril",
-    "Purok 28, Toril",
-    "Purok 28-A, Toril",
-    "Purok 29 Highway Bacud, Bacud",
-    "Purok 30 Interior, Bacud",
-    "Purok 31 Pangpang Riverside, Bacud",
-    "Purok 32 Cortes, Bacud",
-    "Purok 33, SanVicente",
-    "Purok 33-A, SanVicente",
-  ];
-
-  const HandleRegister = () => {
+  const HandleRegister = async () => {
     setLoadingstate(true);
     if (
       (Form,
@@ -179,67 +128,52 @@ const RegisterForm = () => {
       occupancystatus)
     ) {
       if (ImageFile) {
-        const storageRef = ref(storage, Imagename);
-        const uploadTask = uploadBytesResumable(storageRef, ImageFile);
-
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const prog = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-          },
-          (err) => console.log(err),
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              const inputs = {
-                ...Form,
-                image: url,
-                birthdate: dayjs(birthdate).format("MMM D, YYYY"),
-                address,
-                sex,
-                civilstatus,
-                PWD: PWD === "Yes" ? true : false,
-                fourpsmember: fourpsmember === "Yes" ? true : false,
-                registervoter: registervoter === "Yes" ? true : false,
-                occupancystatus,
-              };
-
-              const register = async () => {
-                try {
-                  const res = await publicRequest.post("resident", inputs);
-                  setLoadingstate(false);
-                  dispatch(addResidentSuccess(res.data));
-                  showNotification({
-                    title: "Register Successfully!",
-                    message: "The data is registered successfully!",
-                  });
-                } catch (error) {
-                  setLoadingstate(false);
-                  showNotification({
-                    title: "Error, Please try again",
-                    message:
-                      "Perhaps you're not connected to the internet or you omit any details",
-                  });
-                }
-              };
-              register();
+        // Convert image to base64
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64Image = reader.result;
+          const inputs = {
+            ...Form,
+            image: base64Image,
+            birthdate: dayjs(birthdate).format("MMM D, YYYY"),
+            address,
+            sex,
+            civilstatus,
+            PWD: PWD === "Yes",
+            fourpsmember: fourpsmember === "Yes",
+            registervoter: registervoter === "Yes",
+            occupancystatus,
+            residentId: Date.now(),
+          };
+          try {
+            await userRequest.post("/residents", inputs);
+            showNotification({
+              title: "Success",
+              message: "Resident registered successfully!",
             });
+            setLoadingstate(false);
+          } catch (error) {
+            showNotification({
+              title: "Error",
+              message: error.response?.data?.message || "Failed to register resident",
+            });
+            setLoadingstate(false);
           }
-        );
+        };
+        reader.readAsDataURL(ImageFile);
       } else {
         showNotification({
-          title: "Input Image",
-          message: "You forgot to input image",
+          title: "Image Required",
+          message: "Please upload an image.",
         });
         setLoadingstate(false);
       }
     } else {
-      setLoadingstate(false);
       showNotification({
-        title: "Fill out all details",
-        message: "Please don't omit any details",
+        title: "Missing Fields",
+        message: "Please fill in all required fields.",
       });
+      setLoadingstate(false);
     }
   };
 

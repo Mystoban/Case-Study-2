@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 import dayjs from "dayjs";
@@ -25,8 +25,8 @@ const useStyles = createStyles((theme) => ({
     height: "100%",
     background:
       theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+        ? theme.colors.dark[7]
+        : theme.white,
     transition: "ease-in-out 500ms",
     borderRadius: `20px`,
     display: "flex",
@@ -302,8 +302,7 @@ const MyDocuments = ({
                   This is also to certify that the above-mentioned person is
                   transferring her residency from <Text>
                     {LocationFrom}
-                  </Text> to <Text>{ClientAddress}</Text>, Brgy. Luna, Surigao
-                  City, Surigao Del Norte.
+                  </Text> to <Text>{ClientAddress}</Text>, Brgy. Luna, Iligan City, Lanao Del Norte.
                 </Text>
               </View>
               <View style={styles.marginTopContainer}>
@@ -322,8 +321,7 @@ const MyDocuments = ({
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>
@@ -379,7 +377,7 @@ const DataFillOut = ({
         style={styles.textinputs}
         label="Address"
         radius="sm"
-        placeholder="ex. Purok 1, Payawan 2"
+        placeholder="ex. Purok 1, Sitio 1"
         onChange={(e) => setClientAddress(e.target.value)}
       />
       <TextInput

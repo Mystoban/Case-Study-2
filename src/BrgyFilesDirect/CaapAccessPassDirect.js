@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
@@ -22,8 +22,8 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     background:
       theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+        ? theme.colors.dark[7]
+        : theme.white,
     borderRadius: `20px`,
     display: "flex",
     flexDirection: "column",
@@ -269,7 +269,7 @@ const MyDocuments = ({
                   <Text style={styles.textlowercase}>{ClientSex}</Text>,{" "}
                   <Text style={styles.textCapitalize}>{ClientCitizenship}</Text>{" "}
                   Citizen, a resident of {" "}
-                  <Text>{ClientAddress}</Text>, Barangay Luna, Surigao City.
+                  <Text>{ClientAddress}</Text>, Barangay Kalilangan, Iligan City.
                 </Text>
               </View>
               <View style={styles.marginTopContainer} wrap={true}>
@@ -277,7 +277,7 @@ const MyDocuments = ({
                   <Text style={styles.marginspacing}>...............</Text>
                   This is also to certify that <Text style={styles.clientname}>{ClientName}</Text> is{" "}
                   <Text style={styles.textregular}>NOT IDENTIFIED</Text> as a <Text style={styles.textregular}>PERSON UNDER MONITORING (PUM) or PERSON UNDER INVESTIGATION (PUI)</Text>{" "}
-                  based on the records of Barangay Luna District Health Center.
+                  based on the records of Barangay Kalilangan District Health Center.
                 </Text>
               </View>
               <View style={styles.marginTopContainer}>
@@ -296,8 +296,7 @@ const MyDocuments = ({
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>

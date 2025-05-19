@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
@@ -23,8 +23,8 @@ const useStyles = createStyles((theme) => ({
     height: "1500px",
     background:
       theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+        ? theme.colors.dark[7]
+        : theme.white,
     borderRadius: `20px`,
     display: "flex",
     flexDirection: "column",
@@ -375,7 +375,7 @@ const MyDocuments = ({
                   <Text style={styles.numberpadding}>1.</Text>
                   <Text>
                     He/She is a resident of <Text>{singleperson?.address}</Text>
-                    , Barangay Luna, Surigao City for{" "}
+                    , Barangay Kalilangan, Iligan City for{" "}
                     <Text>{ResidingYears}</Text>.
                   </Text>
                 </View>
@@ -460,7 +460,7 @@ const MyDocuments = ({
                   for the issuance of{" "}
                   <Text style={styles.textuppercase}>
                     {
-                      "SOLO PARENT ID CARD by the SURIGAO CITY SOCIAL WELFARE & DEVELOPMENT OFFICE"
+                      "SOLO PARENT ID CARD by the ILIGAN CITY SOCIAL WELFARE & DEVELOPMENT OFFICE"
                     }
                   </Text>{" "}
                   <Text style={styles.textregular}>
@@ -477,8 +477,7 @@ const MyDocuments = ({
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>

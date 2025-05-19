@@ -16,10 +16,7 @@ import { Logo } from './HeaderContainer';
 
 const useStyles = createStyles((theme) => ({
   root: {
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[3]
-        : theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
     border: "none",
     left: 0,
     transition: "ease-in-out 500ms",
@@ -42,27 +39,18 @@ const useStyles = createStyles((theme) => ({
     borderRadius: "18px",
     marginBottom: `-${theme.spacing.xs}px`,
     textDecoration: "none",
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.lighttheme[2]
-        : theme.colors.darktheme[1],
+    color: theme.colorScheme === "dark" ? theme.white : theme.colors.dark[7],
 
     "&:hover": {
-      background:
-        theme.colorScheme === "dark"
-          ? theme.colors.darktheme[1]
-          : theme.colors.lighttheme[1],
-      color: theme.colors.darktheme[0],
+      background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1],
+      color: theme.colors.green[6],
       cursor: "pointer",
       transition: "ease-in-out 250ms",
     },
   },
   navbarsectionsfocused: {
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[1]
-        : theme.colors.lighttheme[1],
-    color: theme.colors.darktheme[0],
+    background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1],
+    color: theme.colors.green[6],
     transition: `ease-in-out 500ms`,
   },
   text: {
@@ -79,7 +67,6 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     height: "auto",
-    border: `1px solid red`,
     padding: "0",
     marginRight: `${theme.spacing.xl}px`,
     width: "100%",
@@ -156,10 +143,10 @@ const MediaQueryNavbar = ({ width, Active, setActive, classes, dispatch, cx, Sho
                 }
               }}
               component={Link}
-              to="masterlist"
+              to="/residentlist"
             >
               <ClipboardList size={19} />
-              <Text className={classes.text}>Masterlist</Text>
+              <Text className={classes.text}>Resident List</Text>
             </Navbar.Section>
           </Group>
           <Divider my="md" />
@@ -178,7 +165,7 @@ const MediaQueryNavbar = ({ width, Active, setActive, classes, dispatch, cx, Sho
                 }
               }}
               component={Link}
-              to="events"
+              to="/events"
             >
               <CalendarEvent size={19} />
               <Text className={classes.text}>Events</Text>
@@ -200,7 +187,7 @@ const MediaQueryNavbar = ({ width, Active, setActive, classes, dispatch, cx, Sho
                 }
               }}
               component={Link}
-              to="transactions"
+              to="/transactions"
             >
               <Folder size={19} />
               <Text className={classes.text}>Documents</Text>
@@ -216,10 +203,10 @@ const MediaQueryNavbar = ({ width, Active, setActive, classes, dispatch, cx, Sho
                 }
               }}
               component={Link}
-              to="report"
+              to="/logs"
             >
               <Checklist size={19} />
-              <Text className={classes.text}>Reports</Text>
+              <Text className={classes.text}>Logs</Text>
             </Navbar.Section>
           </Group>
         </Container>

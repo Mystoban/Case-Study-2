@@ -11,6 +11,7 @@ import { showNotification } from "@mantine/notifications";
 import { publicRequest } from "../RequestMethod";
 import { RecordAdd } from "../redux/RecordRedux";
 import { useDispatch } from "react-redux";
+
 const useStyles = createStyles((theme) => ({
   textinputs: {
     width: "90%",
@@ -28,9 +29,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const AdditionInputs = ({ clientname, lettername }) => {
-  const [letterprice, setPrice] = useState();
-  const [Form, setForm] = useState({});
-  // const [kagawad, setKagawad] = useState("samplekagawad1");
+  const [letterprice, setPrice] = useState(0);
+  const [Form, setForm] = useState({
+    staffname: '',
+    kagawadname: ''
+  });
   const { classes } = useStyles();
   const dispatch = useDispatch();
 
@@ -40,46 +43,74 @@ const AdditionInputs = ({ clientname, lettername }) => {
     setForm({ ...Form, [nameForm]: valueForm });
   };
 
-  const HandleButton = () => {
-    if (clientname) {
-      if (Form && lettername && letterprice) {
-        const input = {
-          ...Form,
-          lettername,
-          letterprice,
-          clientname,
-        };
-    
-        const recordData = async () => {
-          try {
-            const res = await publicRequest.post("record", input);
-            dispatch(RecordAdd(res.data));
-            showNotification({
-              title: "Record Successfully!",
-              message: "The transaction was recorded in report logs",
-            });
-          } catch (error) {
-            showNotification({
-              title: "Error!",
-              message: "Posting Error",
-            });
-          }
-        };
+  const validateForm = () => {
+    if (!clientname) {
+      showNotification({
+        title: "No Client Name!",
+        message: "You forgot to input client name",
+        color: "red"
+      });
+      return false;
+    }
+    if (!Form.staffname || !Form.kagawadname) {
+      showNotification({
+        title: "Missing Information",
+        message: "Please fill in all required fields",
+        color: "red"
+      });
+      return false;
+    }
+    if (!letterprice || letterprice <= 0) {
+      showNotification({
+        title: "Invalid Price",
+        message: "Please enter a valid price",
+        color: "red"
+      });
+      return false;
+    }
+    return true;
+  };
 
-        recordData();
-      } else {
+  const HandleButton = async () => {
+    if (!validateForm()) return;
+
+    const input = {
+      clientname,
+      lettername,
+      letterprice: Number(letterprice),
+      staffname: Form.staffname,
+      kagawadname: Form.kagawadname,
+      type: 'certificate',
+      purpose: lettername
+    };
+
+    try {
+      const res = await publicRequest.post("/records", input);
+      if (res.data) {
+        dispatch(RecordAdd(res.data));
         showNotification({
-          title: "Error!",
-          message: "Please don't omit any details",
+          title: "Success!",
+          message: "The transaction was recorded in report logs",
+          color: "green"
+        });
+        
+        // Reset form
+        setPrice(0);
+        setForm({
+          staffname: '',
+          kagawadname: ''
         });
       }
-    } else {
+    } catch (error) {
+      console.error('Error creating record:', error.response?.data || error);
       showNotification({
-        title: "No ClientName!",
-        message: "You forgot to input clientname",
+        title: "Error!",
+        message: error.response?.data?.message || "Failed to create record",
+        color: "red"
       });
     }
   };
+
   return (
     <Container fluid="true" className={classes.borderContainer}>
       <Divider
@@ -96,6 +127,8 @@ const AdditionInputs = ({ clientname, lettername }) => {
         name="staffname"
         placeholder="Clerk Name"
         radius="sm"
+        required
+        value={Form.staffname}
         onChange={AllFunction}
       />
       <NumberInput
@@ -104,18 +137,21 @@ const AdditionInputs = ({ clientname, lettername }) => {
         name="letterprice"
         placeholder="Document Price"
         radius="sm"
-        onChange={setPrice}
+        required
+        value={letterprice}
+        min={0}
+        onChange={(val) => setPrice(val)}
       />
-
       <TextInput
         className={classes.textinputs}
         label="Kagawad on Duty"
         name="kagawadname"
         placeholder="Kagawad Name"
         radius="sm"
+        required
+        value={Form.kagawadname}
         onChange={AllFunction}
       />
-
       <Button
         onClick={HandleButton}
         className={classes.registerbutton}

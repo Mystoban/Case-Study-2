@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles, Checkbox } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
@@ -22,8 +22,8 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     background:
       theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+        ? theme.colors.dark[7]
+        : theme.white,
     borderRadius: `20px`,
     display: "flex",
     flexDirection: "column",
@@ -281,12 +281,12 @@ const MyDocuments = ({ Four4Ps, TransferBrgy, singleperson, Reverse }) => {
                   {Reverse ? (
                     <>
                       <Text>{TransferBrgy || ""}</Text> to{" "}
-                      <Text>{singleperson?.address}</Text>, Barangay Luna, Surigao City, Surigao Del Norte.
+                      <Text>{singleperson?.address}</Text>, Barangay Kalilangan, Iligan City, Lanao Del Norte.
                     </>
                   ) : (
                     <>
-                      <Text>{singleperson?.address}</Text>, Barangay Luna,
-                      Surigao City, Surigao del Norte to{" "}
+                      <Text>{singleperson?.address}</Text>, Barangay Kalilangan,
+                      Iligan City, Lanao Del Norte to{" "}
                       <Text>{TransferBrgy || ""}</Text>.
                     </>
                   )}
@@ -312,8 +312,7 @@ const MyDocuments = ({ Four4Ps, TransferBrgy, singleperson, Reverse }) => {
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>
@@ -350,7 +349,7 @@ const DataFillOut = ({
         style={styles.textinputs}
         label="From/To Address"
         radius="sm"
-        placeholder="ex. Barangay Cagdianao, Claver, Surigao Del Norte"
+        placeholder="ex. Barangay Cagdianao, Claver, Lanao Del Norte"
         onChange={(e) => setTransferBrgy(e.target.value)}
       />
       <AdditionInputs clientname={Clientfullname} lettername="4P's Transfery" />

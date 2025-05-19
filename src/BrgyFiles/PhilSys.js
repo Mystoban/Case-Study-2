@@ -14,7 +14,7 @@ import { Container, TextInput, createStyles, Button } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import Webcam from "react-webcam";
 import { Capture, ArrowBack } from "tabler-icons-react";
 import { useSelector } from "react-redux";
@@ -23,27 +23,26 @@ import { AdditionInputs } from "../Components";
 const useStyles = createStyles((theme) => ({
   root: {
     width: "100%",
-    height: "1000px",
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark" 
+      ? theme.colors.dark[7]
+      : theme.white,
     borderRadius: `20px`,
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
   },
   buttonreset: {
     background:
       theme.colorScheme === "dark"
         ? theme.colors.darktheme[8]
         : theme.colors.lighttheme[6],
-    color: theme.colors.lighttheme[0],
+    color: theme.white,
     width: "130px",
     border: "none",
     transition: `ease-in-out 500ms`,
 
     "&:hover": {
-      color: theme.colors.lighttheme[0],
+      color: theme.white,
       background:
         theme.colorScheme === "dark"
           ? theme.colors.lighttheme[6]
@@ -51,11 +50,10 @@ const useStyles = createStyles((theme) => ({
     },
   },
   buttoncapture: {
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[7]
-        : theme.colors.lighttheme[5],
-    color: theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark"
+      ? theme.colors.dark[6]
+      : theme.colors.green[6],
+    color: theme.white,
     width: "130px",
     paddingTop: 5,
     paddingBottom: 5,
@@ -64,11 +62,10 @@ const useStyles = createStyles((theme) => ({
     marginTop: 20,
 
     "&:hover": {
-      color: theme.colors.lighttheme[0],
-      background:
-        theme.colorScheme === "dark"
-          ? theme.colors.lighttheme[5]
-          : theme.colors.darktheme[7],
+      color: theme.white,
+      background: theme.colorScheme === "dark"
+        ? theme.colors.green[7]
+        : theme.colors.dark[6],
     },
   },
 }));
@@ -436,8 +433,7 @@ const MyDocuments = ({ singleperson, CaptureImage, ClientPurpose, ORNo }) => {
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
               {CaptureImage && (

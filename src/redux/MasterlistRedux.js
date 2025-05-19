@@ -34,12 +34,12 @@ const MasterlistRedux = createSlice({
     },
     updateResident: (state, action) => {
       state.residents = state.residents.map((resident) =>
-        resident.id === action.payload.id ? action.payload : resident
+        resident.residentId === action.payload.residentId ? action.payload : resident
       );
     },
     deleteResident: (state, action) => {
       state.residents = state.residents.filter(
-        (resident) => resident.id !== action.payload
+        (resident) => resident.residentId !== action.payload
       );
     },
   },

@@ -13,17 +13,16 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
 const useStyles = createStyles((theme) => ({
   root: {
     width: "100%",
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark" 
+      ? theme.colors.dark[7]
+      : theme.white,
     borderRadius: `20px`,
     display: "flex",
     flexDirection: "column",
@@ -274,7 +273,7 @@ const MyDocuments = ({
                   <Text style={styles.textlowercase}>{ClientCivilStatus}</Text>,{" "}
                   <Text style={styles.textCapitalize}>{ClientCitizenship}</Text>{" "}
                   Citizen, a resident of <Text>{ClientAddress}</Text>, Barangay
-                  Luna, Surigao City.
+                  Kalilangan, Iligan City.
                 </Text>
               </View>
               <View style={styles.marginTopContainer} wrap={true}>
@@ -290,7 +289,7 @@ const MyDocuments = ({
                 <Text style={styles.textfirstparag}>
                   <Text style={styles.marginspacing}>...............</Text>
                   This certification is being issued upon the request of the
-                  above-named person as required by <Text style={styles.textregular}>SLAUGHTERHOUSE at Barangay Poctoy, Surigao City</Text>.
+                  above-named person as required by <Text style={styles.textregular}>SLAUGHTERHOUSE at Barangay Poctoy, Iligan City</Text>.
                 </Text>
               </View>
               <View style={styles.marginTopContainer}>
@@ -301,8 +300,7 @@ const MyDocuments = ({
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>
@@ -357,7 +355,7 @@ const DataFillOut = ({
         style={styles.textinputs}
         label="Address"
         radius="sm"
-        placeholder="ex. Purok 1, Payawan 2"
+        placeholder="ex. Purok 1, Sitio 1"
         onChange={(e) => setClientAddress(e.target.value)}
       />
       <TextInput

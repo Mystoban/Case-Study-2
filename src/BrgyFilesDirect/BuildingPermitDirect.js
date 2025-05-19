@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/BRGY_KALILANGAN - Logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
@@ -22,8 +22,8 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     background:
       theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+        ? theme.colors.dark[7]
+        : theme.white,
     borderRadius: `20px`,
     display: "flex",
     flexDirection: "column",
@@ -285,7 +285,7 @@ const MyDocuments = ({
                   age, <Text style={styles.textlowercase}>{ClientSex}</Text>,{" "}
                   <Text style={styles.textCapitalize}>{ClientCitizenship}</Text>{" "}
                   Citizen, a resident of <Text>{ClientAddress}</Text>, Barangay
-                  Luna, Surigao City.
+                  Luna, Iligan City.
                 </Text>
               </View>
               <View style={styles.marginTopContainer}>
@@ -307,7 +307,7 @@ const MyDocuments = ({
                     CITY ENGINEERING OFFICE (CEO) for the purpose of BUILDING
                     PERMIT (PERIMETER FENCE)
                   </Text>{" "}
-                  at <Text>{ClientAddress}</Text>, Brgy. Luna, Surigao City.
+                  at <Text>{ClientAddress}</Text>, Brgy. Luna, Iligan City.
                 </Text>
               </View>
               <View style={styles.marginTopContainer}>
@@ -318,8 +318,7 @@ const MyDocuments = ({
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>
@@ -377,7 +376,7 @@ const DataFillOut = ({
         style={styles.textinputs}
         label="Address"
         radius="sm"
-        placeholder="ex. Purok 1, Payawan 2"
+        placeholder="ex. Purok 1, Sitio 1"
         onChange={(e) => setClientAddress(e.target.value)}
       />
       <TextInput

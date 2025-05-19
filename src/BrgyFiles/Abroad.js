@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_LUNA - Logo.png";
+import Logo from "../images/brgy_kalilangan_logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
@@ -22,8 +22,8 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     background:
       theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+        ? theme.colors.dark[7]
+        : theme.white,
     transition: "ease-in-out 500ms",
     borderRadius: `20px`,
     display: "flex",
@@ -280,7 +280,7 @@ const MyDocuments = ({ OscaIDNo, LocationFrom, singleperson, ClientAge }) => {
                   transferring her residency from <Text>
                     {LocationFrom}
                   </Text> to <Text>{singleperson?.address}</Text>, Brgy. Luna,
-                  Surigao City, Surigao Del Norte.
+                  Iligan City, Lanao Del Norte.
                 </Text>
               </View>
               <View style={styles.marginTopContainer}>
@@ -299,8 +299,7 @@ const MyDocuments = ({ OscaIDNo, LocationFrom, singleperson, ClientAge }) => {
                     {day}
                     {DayMoment(day)}
                   </Text>{" "}
-                  day of <Text>{MonthAndDate}</Text> at Barangay Luna, Surigao
-                  City, Philippines.{" "}
+                  day of <Text>{MonthAndDate}</Text> at Barangay Kalilangan, Iligan City, Philippines.{" "}
                 </Text>
               </View>
             </View>

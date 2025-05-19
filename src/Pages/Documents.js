@@ -17,37 +17,34 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     height: "100vh",
     borderRadius: `20px`,
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark" 
+      ? theme.colors.dark[7]
+      : theme.white,
     transition: "ease-in-out 500ms",
   },
   button: {
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[6]
-        : theme.colors.lighttheme[3],
-    color: theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark"
+      ? theme.colors.dark[6]
+      : theme.colors.green[6],
+    color: theme.white,
     transition: "ease-in-out 500ms",
     width: "150px",
 
     "&:hover": {
-      background: theme.colors.darktheme[0],
+      background: theme.colors.green[7],
     },
   },
   button2: {
     marginLeft: `${theme.spacing.sm}px`,
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[6]
-        : theme.colors.lighttheme[3],
-    color: theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark"
+      ? theme.colors.dark[6]
+      : theme.colors.green[6],
+    color: theme.white,
     transition: "ease-in-out 500ms",
     width: "180px",
 
     "&:hover": {
-      background: theme.colors.darktheme[0],
+      background: theme.colors.green[7],
     },
   },
   group: {
@@ -68,16 +65,14 @@ const useStyles = createStyles((theme) => ({
   hidden: {
     display: "none",
   },
-
   noimage: {
     width: "150px",
     height: "150px",
-    border: `1px dashed ${theme.colors.lighttheme[1]}`,
+    border: `1px dashed ${theme.colorScheme === "dark" ? theme.colors.dark[3] : theme.colors.gray[4]}`,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
-
   app: {
     display: "flex",
     width: "100vw",
@@ -202,11 +197,11 @@ const Buttons = ({
           background:
             theme.colorScheme === "dark"
               ? RegisterButtonClick
-                ? theme.colors.darktheme[0]
-                : theme.colors.darktheme[6]
+                ? theme.colors.dark[0]
+                : theme.colors.dark[6]
               : RegisterButtonClick
-              ? theme.colors.darktheme[0]
-              : theme.colors.lighttheme[3],
+              ? theme.colors.dark[0]
+              : theme.colors.green[6],
         })}
         className={classes.button}
         onClick={() => {
@@ -225,11 +220,11 @@ const Buttons = ({
           background:
             theme.colorScheme === "dark"
               ? FaceRecognitionButtonClick
-                ? theme.colors.darktheme[0]
-                : theme.colors.darktheme[6]
+                ? theme.colors.dark[0]
+                : theme.colors.dark[6]
               : FaceRecognitionButtonClick
-              ? theme.colors.darktheme[0]
-              : theme.colors.lighttheme[3],
+              ? theme.colors.dark[0]
+              : theme.colors.green[6],
         })}
         className={classes.button2}
         onClick={() => {
@@ -248,11 +243,11 @@ const Buttons = ({
           background:
             theme.colorScheme === "dark"
               ? AccessDocuments
-                ? theme.colors.darktheme[0]
-                : theme.colors.darktheme[6]
+                ? theme.colors.dark[0]
+                : theme.colors.dark[6]
               : AccessDocuments
-              ? theme.colors.darktheme[0]
-              : theme.colors.lighttheme[3],
+              ? theme.colors.dark[0]
+              : theme.colors.green[6],
         })}
         className={classes.button}
         onClick={() => {

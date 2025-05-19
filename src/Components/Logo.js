@@ -1,38 +1,51 @@
-import React from 'react'
-import { Container, Image, Text, createStyles } from "@mantine/core";
-
+import React from "react";
+import { createStyles, Group, Text, Image, Box } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
-  logoContainer: {
+  container: {
     display: "flex",
-    justifyContent: "center",
     alignItems: "center",
-    height: "85px",
-    padding: "none",
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.lighttheme[0]
-        : theme.colors.lighttheme[4],
-    transition: `ease-in-out 500ms`,
+    justifyContent: "center",
+    marginBottom: theme.spacing.xl,
+    marginTop: theme.spacing.xs,
   },
-  text: {
-    fontFamily: "Bold",
-    marginLeft: 11,
+  logoWrapper: {
+    width: 70,
+    height: 70,
+    flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
+  logo: {
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 600,
+    color: theme.colorScheme === "dark" ? theme.white : theme.colors.dark[7],
+    marginLeft: theme.spacing.md,
+    textAlign: "center",
+  }
 }));
 
-
 const Logo = () => {
-    const brgyluna = require("../images/BRGY_LUNA - Logo.png");
-    const { classes } = useStyles();
-  return (
-    <Container className={classes.logoContainer}>
-      <Image src={brgyluna} alt="BrgyLuna" width={50} height={50}></Image>
-      <Text className={classes.text} size="lg" transform="uppercase">
-        brgy luna management system with face recognition
-      </Text>
-    </Container>
-  );
-}
+  const { classes } = useStyles();
 
-export default Logo
+  return (
+    <Group className={classes.container}>
+      <Box className={classes.logoWrapper}>
+        <Image
+          className={classes.logo}
+          src="/iligan_seal.png"
+          alt="Iligan City Seal"
+        />
+      </Box>
+      <Text className={classes.title}>Barangay Kalilangan</Text>
+    </Group>
+  );
+};
+
+export default Logo;

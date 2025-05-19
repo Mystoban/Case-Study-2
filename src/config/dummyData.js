@@ -1,3 +1,87 @@
+export const Sitio1 = [
+  "ALL",
+  "PUROK 1",
+  "PUROK 2",
+  "PUROK 3",
+  "PUROK 4",
+  "PUROK 5",
+  "PUROK 6",
+  "PUROK 7",
+  "PUROK 8",
+  "PUROK 9",
+  "PUROK 10"
+];
+
+export const Sitio2 = [
+  "ALL",
+  "PUROK 1",
+  "PUROK 2",
+  "PUROK 3",
+  "PUROK 4",
+  "PUROK 5",
+  "PUROK 6",
+  "PUROK 7",
+  "PUROK 8",
+  "PUROK 9",
+  "PUROK 10"
+];
+
+export const Sitio3 = [
+  "ALL",
+  "PUROK 1",
+  "PUROK 2",
+  "PUROK 3",
+  "PUROK 4",
+  "PUROK 5",
+  "PUROK 6",
+  "PUROK 7",
+  "PUROK 8",
+  "PUROK 9",
+  "PUROK 10"
+];
+
+export const Sitio4 = [
+  "ALL",
+  "PUROK 1",
+  "PUROK 2",
+  "PUROK 3",
+  "PUROK 4",
+  "PUROK 5",
+  "PUROK 6",
+  "PUROK 7",
+  "PUROK 8",
+  "PUROK 9",
+  "PUROK 10"
+];
+
+export const Sitio5 = [
+  "ALL",
+  "PUROK 1",
+  "PUROK 2",
+  "PUROK 3",
+  "PUROK 4",
+  "PUROK 5",
+  "PUROK 6",
+  "PUROK 7",
+  "PUROK 8",
+  "PUROK 9",
+  "PUROK 10"
+];
+
+export const Sitio6 = [
+  "ALL",
+  "PUROK 1",
+  "PUROK 2",
+  "PUROK 3",
+  "PUROK 4",
+  "PUROK 5",
+  "PUROK 6",
+  "PUROK 7",
+  "PUROK 8",
+  "PUROK 9",
+  "PUROK 10"
+];
+
 export const Payawan1 = [
   "ALL",
   "PUROK 1",

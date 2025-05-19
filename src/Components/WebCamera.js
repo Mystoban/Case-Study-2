@@ -10,7 +10,6 @@ const useStyles = createStyles((theme) => ({
     width: "450px",
     display: "flex",
     height: "100%",
-
     flexDirection: "column",
     alignItems: "flex-start",
   },
@@ -28,42 +27,38 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
   },
   buttoncapture: {
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[7]
-        : theme.colors.lighttheme[5],
-    color: theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark"
+      ? theme.colors.dark[6]
+      : theme.colors.green[6],
+    color: theme.white,
     width: "130px",
     border: "none",
     transition: `ease-in-out 500ms`,
 
     "&:hover": {
-      color: theme.colors.lighttheme[0],
-      background:
-        theme.colorScheme === "dark"
-          ? theme.colors.lighttheme[5]
-          : theme.colors.darktheme[7],
+      color: theme.white,
+      background: theme.colorScheme === "dark"
+        ? theme.colors.green[7]
+        : theme.colors.dark[6],
     },
   },
   hidden: {
     display: "none",
   },
   buttonreset: {
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[8]
-        : theme.colors.lighttheme[6],
-    color: theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark"
+      ? theme.colors.dark[6]
+      : theme.colors.red[6],
+    color: theme.white,
     width: "130px",
     border: "none",
     transition: `ease-in-out 500ms`,
 
     "&:hover": {
-      color: theme.colors.lighttheme[0],
-      background:
-        theme.colorScheme === "dark"
-          ? theme.colors.lighttheme[6]
-          : theme.colors.darktheme[8],
+      color: theme.white,
+      background: theme.colorScheme === "dark"
+        ? theme.colors.red[7]
+        : theme.colors.dark[6],
     },
   },
   savercontainer: {

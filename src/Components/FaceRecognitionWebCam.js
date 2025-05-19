@@ -34,22 +34,20 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
   },
   resetbutton: {
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[8]
-        : theme.colors.lighttheme[6],
-    color: theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark"
+      ? theme.colors.dark[6]
+      : theme.colors.green[6],
+    color: theme.white,
     width: "130px",
     border: "none",
     transition: `ease-in-out 500ms`,
     cursor: "pointer",
 
     "&:hover": {
-      color: theme.colors.lighttheme[0],
-      background:
-        theme.colorScheme === "dark"
-          ? theme.colors.lighttheme[6]
-          : theme.colors.darktheme[8],
+      color: theme.white,
+      background: theme.colorScheme === "dark"
+        ? theme.colors.green[7]
+        : theme.colors.dark[6],
       cursor: "pointer",
     },
   },
@@ -108,76 +106,83 @@ const FaceRecognitionWebCam = ({ videoRef, CloseWebCam }) => {
   };
 
   const handleVideoOnPlay = () => {
-    setInterval(async () => {
+    const interval = setInterval(async () => {
       if (initializing) {
         setInitializing(false);
       }
-      canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
-        videoRef.current
-      );
-      const displaySize = {
-        width: videoWidth,
-        height: videoHeight,
-      };
 
-      faceapi.matchDimensions(canvasRef.current, displaySize);
-
-      const detection = await faceapi
-        .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-        .withFaceLandmarks()
-        .withFaceExpressions()
-        .withFaceDescriptors();
-
-      if (detection.length >= 2) {
-        showNotification({
-          title: "One person only",
-          message: "The camera detects two faces",
-        });
-      } else {
+      if (!videoRef.current || !videoRef.current.readyState === 4) {
+        return; // Video not ready yet
       }
 
-      const resizeDetections = faceapi.resizeResults(detection, displaySize);
-      canvasRef.current
-        .getContext("2d")
-        .clearRect(0, 0, videoWidth, videoHeight);
+      try {
+        canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
+          videoRef.current
+        );
+        const displaySize = {
+          width: videoWidth,
+          height: videoHeight,
+        };
 
-      faceapi.draw.drawDetections(canvasRef.current, resizeDetections);
-      faceapi.draw.drawFaceLandmarks(canvasRef.current, resizeDetections);
-      faceapi.draw.drawFaceExpressions(canvasRef.current, resizeDetections);
+        faceapi.matchDimensions(canvasRef.current, displaySize);
 
-      const labeledDescriptors = await loadLabeledImages();
+        const detection = await faceapi
+          .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks()
+          .withFaceExpressions()
+          .withFaceDescriptors();
 
-      const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.6);
-      const results = resizeDetections.map((fd) =>
-        faceMatcher.findBestMatch(fd.descriptor)
-      );
-
-      const recognizeName = results[0]?._label;
-
-      if (OpenCam) {
-        if (recognizeName) {
-          recognizeName === "unknown"
-            ? showNotification({
-                title: "Unrecognized person",
-                message: "Please register to recognized the person",
-              })
-            : GetFaceRecognitionData(dispatch, recognizeName, showNotification);
-        } else {
+        if (detection.length >= 2) {
+          showNotification({
+            title: "One person only",
+            message: "The camera detects two faces",
+          });
         }
-      } else {
-        console.log("none");
-      }
 
-      results.forEach((bestMatch, i) => {
-        const box = resizeDetections[i].detection.box;
-        const text = bestMatch.toString();
+        const resizeDetections = faceapi.resizeResults(detection, displaySize);
+        canvasRef.current
+          .getContext("2d")
+          .clearRect(0, 0, videoWidth, videoHeight);
 
-        const drawBox = new faceapi.draw.DrawBox(box, {
-          label: text,
+        faceapi.draw.drawDetections(canvasRef.current, resizeDetections);
+        faceapi.draw.drawFaceLandmarks(canvasRef.current, resizeDetections);
+        faceapi.draw.drawFaceExpressions(canvasRef.current, resizeDetections);
+
+        const labeledDescriptors = await loadLabeledImages();
+
+        const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.6);
+        const results = resizeDetections.map((fd) =>
+          faceMatcher.findBestMatch(fd.descriptor)
+        );
+
+        const recognizeName = results[0]?._label;
+
+        if (OpenCam) {
+          if (recognizeName) {
+            recognizeName === "unknown"
+              ? showNotification({
+                  title: "Unrecognized person",
+                  message: "Please register to recognized the person",
+                })
+              : GetFaceRecognitionData(dispatch, recognizeName, showNotification);
+          }
+        }
+
+        results.forEach((bestMatch, i) => {
+          const box = resizeDetections[i].detection.box;
+          const text = bestMatch.toString();
+
+          const drawBox = new faceapi.draw.DrawBox(box, {
+            label: text,
+          });
+          drawBox.draw(canvasRef.current);
         });
-        drawBox.draw(canvasRef.current);
-      });
+      } catch (error) {
+        console.error('Face recognition error:', error);
+      }
     }, 5000);
+
+    return () => clearInterval(interval); // Cleanup interval on unmount
   };
 
   const loadLabeledImages = () => {

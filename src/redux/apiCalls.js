@@ -6,7 +6,7 @@ import {
   deleteResident,
 } from "./MasterlistRedux";
 
-import { publicRequest } from "../RequestMethod";
+import { publicRequest, userRequest } from "../RequestMethod";
 
 import {
   FaceGetInfoStart,
@@ -19,7 +19,7 @@ import { fetchAllEvents, addEvents, deleteEvent } from "./EventRedux";
 import { fetchEventToday, fetchEventTodayFailed } from "./EventTodayRedux";
 
 import { LoginUser, Logout } from "./UserRedux";
-import { RecordGetAll } from "./RecordRedux";
+import { RecordGetAll, RecordLoading, RecordError } from "./RecordRedux";
 
 //fetch data of a single person
 export const GetFaceRecognitionData = async (
@@ -29,76 +29,75 @@ export const GetFaceRecognitionData = async (
 ) => {
   try {
     dispatch(FaceGetInfoStart());
-    const res = await publicRequest.get(`resident/find?fullname=${fullname}`);
+    const res = await userRequest.get(`/residents/search?fullname=${fullname}`);
     dispatch(FaceGetInfoSuccess(res.data));
   } catch (error) {
     dispatch(FaceGetInfoFailed());
     showNotification({
-      title: "Error, Please try again",
-      message: "Make sure you are connected to the internet",
+      title: "Error",
+      message: error.response?.data?.message || "Failed to fetch resident data",
     });
   }
 };
 
 //fetch all data
-
 export const GetAllDataResident = async (dispatch) => {
   dispatch(fetchResidentsStart());
   try {
-    const res = await publicRequest.get("resident");
+    const res = await userRequest.get("/residents");
     dispatch(fetchResidentsSuccess(res.data));
   } catch (error) {
     dispatch(fetchResidentsFailed());
+    console.error("Error fetching residents:", error);
   }
 };
 
-//update single data from masterlist
+//Update Resident
 export const UpdateDataResident = async (
   dispatch,
-  id,
+  residentId,
   showNotification,
   setUpdateStatus,
   updatedValues,
   setEditProfileOpened
 ) => {
   try {
-    const res = await publicRequest.patch(`resident?id=${id}`, updatedValues);
+    const res = await userRequest.put(`/residents/${residentId}`, updatedValues);
     dispatch(updateResident(res.data));
     showNotification({
-      title: "Updated Succesfully",
-      message: "The resident's data has been updated!",
+      title: "Success",
+      message: "Resident updated successfully",
     });
     setUpdateStatus(false);
     setEditProfileOpened(false);
   } catch (error) {
     showNotification({
-      title: "Error, Please try again",
-      message: "Make sure you are connected to the internet",
+      title: "Error",
+      message: error.response?.data?.message || "Failed to update resident",
     });
     setUpdateStatus(false);
-    setEditProfileOpened(false);
   }
 };
 
 //Delete Resident from the Masterlist
 export const DeleteDataResident = async (
   dispatch,
-  id,
+  residentId,
   showNotification,
   setDeleteUserModal
 ) => {
   try {
-    const res = await publicRequest.delete(`resident/${id}`);
-    dispatch(deleteResident(id));
+    await userRequest.delete(`/residents/${residentId}`);
+    dispatch(deleteResident(residentId));
     showNotification({
-      title: "Deleted Succesfully",
-      message: "The resident's data has been deleted!",
+      title: "Success",
+      message: "Resident deleted successfully",
     });
     setDeleteUserModal(false);
   } catch (error) {
     showNotification({
-      title: "Error, Please try again",
-      message: "Make sure you are connected to the internet",
+      title: "Error",
+      message: error.response?.data?.message || "Failed to delete resident",
     });
     setDeleteUserModal(false);
   }
@@ -107,12 +106,12 @@ export const DeleteDataResident = async (
 //Get All Events
 export const GetAllBrgyEvents = async (dispatch, showNotification) => {
   try {
-    const res = await publicRequest.get("event");
+    const res = await userRequest.get("/events");
     dispatch(fetchAllEvents(res.data));
   } catch (error) {
     showNotification({
-      title: "Error, Please try again",
-      message: "Make sure you are connected to the internet",
+      title: "Error",
+      message: error.response?.data?.message || "Failed to fetch events",
     });
   }
 };
@@ -125,17 +124,17 @@ export const CreateBrgyEvent = async (
   setcreateEventModal
 ) => {
   try {
-    const res = await publicRequest.post("event", data);
+    const res = await userRequest.post("/events", data);
     dispatch(addEvents(res.data));
     showNotification({
-      title: "Created Succesfully",
-      message: "The brgy event has been created!",
+      title: "Success",
+      message: "Event created successfully",
     });
     setcreateEventModal(false);
-  } catch (err) {
+  } catch (error) {
     showNotification({
-      title: "Error, Please try again",
-      message: "Make sure you are connected to the internet",
+      title: "Error",
+      message: error.response?.data?.message || "Failed to create event",
     });
     setcreateEventModal(false);
   }
@@ -150,18 +149,17 @@ export const DeleteSingleEvent = async (
   eventData
 ) => {
   try {
-    const res = await publicRequest.delete(`event/${ID}`);
-    dispatch(deleteEvent(eventData));
-    console.log(eventData);
+    await userRequest.delete(`/events/${ID}`);
+    dispatch(deleteEvent(ID));
     showNotification({
-      title: "Deleted Succesfully",
-      message: "The brgy event has been deleted!",
+      title: "Success",
+      message: "Event deleted successfully",
     });
     setOpened(false);
-  } catch (err) {
+  } catch (error) {
     showNotification({
-      title: "Error, Please try again",
-      message: "Make sure you are connected to the internet",
+      title: "Error",
+      message: error.response?.data?.message || "Failed to delete event",
     });
     setOpened(false);
   }
@@ -170,22 +168,63 @@ export const DeleteSingleEvent = async (
 //fetch Event Today
 export const GetEventToday = async (dispatch, showNotification) => {
   try {
-    const res = await publicRequest.get("event/eventtoday");
+    const res = await userRequest.get("/events/today");
     dispatch(fetchEventToday(res.data));
-  } catch (err) {
+  } catch (error) {
     dispatch(fetchEventTodayFailed());
+    showNotification({
+      title: "Error",
+      message: error.response?.data?.message || "Failed to fetch today's events",
+    });
   }
 };
 
-//fetch All Transactions
+//fetch All Records
 export const GetAllRecords = async (dispatch, showNotification) => {
   try {
-    const res = await publicRequest.get("record");
-    dispatch(RecordGetAll(res.data));
-  } catch (err) {
-    showNotification({
-      title: "Fetching error",
-      message: "Make sure the XAMPP Control Panel is open",
+    dispatch(RecordLoading());
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    const res = await userRequest.get("/records", {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
+    
+    console.log('API Response:', res);
+    console.log('Response Data:', res.data);
+    
+    if (!res.data) {
+      throw new Error('No data received from server');
+    }
+
+    // Handle both array and object responses
+    let records = [];
+    if (Array.isArray(res.data)) {
+      records = res.data;
+    } else if (typeof res.data === 'object') {
+      if (res.data.data && Array.isArray(res.data.data)) {
+        records = res.data.data;
+      } else if (res.data.records && Array.isArray(res.data.records)) {
+        records = res.data.records;
+      }
+    }
+
+    console.log('Processed Records:', records);
+    dispatch(RecordGetAll(records));
+  } catch (error) {
+    console.error('Error fetching records:', error);
+    const errorMessage = error.response?.data?.message || error.message || "Failed to fetch records";
+    dispatch(RecordError(errorMessage));
+    showNotification({
+      title: "Error",
+      message: errorMessage,
+      color: "red"
+    });
+    dispatch(RecordGetAll([]));
   }
 };

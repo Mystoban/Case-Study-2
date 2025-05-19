@@ -26,25 +26,27 @@ import { ShowNavbar, HideNavbar } from "../redux/NavbarRedux";
 import ColorScheme from "./ColorScheme";
 import Logo from "./Logo";
 import { LogoutUser } from "../redux/UserRedux";
+import { publicRequest, userRequest } from "../RequestMethod";
 
 const useStyles = createStyles((theme) => ({
   root: {
     position: "fixed",
     zIndex: 90,
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[3]
-        : theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
     border: "none",
     display: "flex",
     justifyContent: "space-between",
     alignContent: "center",
     padding: `0 ${theme.spacing.md}px`,
     transition: `ease-in-out 500ms`,
+    boxShadow: theme.colorScheme === "dark"
+      ? "0 2px 8px rgba(0, 0, 0, 0.3)"
+      : "0 2px 8px rgba(46, 125, 50, 0.1)",
   },
   text: {
     fontFamily: "Bold",
     marginLeft: 11,
+    color: theme.colorScheme === "dark" ? theme.white : theme.colors.dark[7],
   },
   logoContainer: {
     display: "flex",
@@ -53,10 +55,7 @@ const useStyles = createStyles((theme) => ({
     height: "85px",
     padding: "0",
     marginRight: `${theme.spacing.xl}px`,
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.lighttheme[0]
-        : theme.colors.lighttheme[4],
+    color: theme.colorScheme === "dark" ? theme.white : theme.colors.dark[7],
     transition: `ease-in-out 500ms`,
   },
   container: {
@@ -64,44 +63,38 @@ const useStyles = createStyles((theme) => ({
     height: "85px",
     alignItems: "center",
     justifyContent: "space-between",
-    border: `1px solid red`,
   },
   menuToggle: {
     marginLeft: "12rem",
-    color: theme.colors.darktheme[0],
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[2]
-        : theme.colors.lighttheme[1],
+    color: theme.colorScheme === "dark" ? theme.white : theme.colors.dark[7],
+    background: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
     border: "none",
     transition: `ease-in-out 500ms`,
 
     "&:hover": {
-      background: theme.colors.darktheme[0],
-      color: theme.colors.lighttheme[0],
+      background: theme.colors.green[6],
+      color: theme.white,
     },
   },
   menuToggle2: {
-    color: theme.colors.darktheme[0],
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[2]
-        : theme.colors.lighttheme[1],
+    color: theme.colorScheme === "dark" ? theme.white : theme.colors.dark[7],
+    background: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
     border: "none",
     marginRight: "1rem",
     transition: `ease-in-out 500ms`,
 
     "&:hover": {
-      background: theme.colors.darktheme[0],
-      color: theme.colors.lighttheme[0],
+      background: theme.colors.green[6],
+      color: theme.white,
     },
   },
   searchbar: {
     "&:hover": {
-      border:
+      border: `1px solid ${
         theme.colorScheme === "dark"
-          ? `1px solid ${theme.colors.darktheme[4]}`
-          : `1px solid ${theme.colors.lighttheme[3]}`,
+          ? theme.colors.dark[4]
+          : theme.colors.gray[3]
+      }`,
     },
 
     [theme.fn.smallerThan("md")]: {
@@ -124,14 +117,11 @@ const useStyles = createStyles((theme) => ({
     padding: `${theme.spacing.xxs}px ${theme.spacing.xs}px`,
 
     "&:hover": {
-      backgroundColor: theme.colors.darktheme[1],
+      backgroundColor: theme.colors.green[1],
     },
   },
   divider: {
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[0]
-        : theme.colors.lighttheme[1],
+    color: theme.colorScheme === "dark" ? theme.white : theme.colors.dark[3],
   },
 }));
 
@@ -181,11 +171,11 @@ const SearchContainer = ({ classes }) => {
           border:
             theme.colorScheme === "dark"
               ? focused
-                ? `1px solid ${theme.colors.darktheme[4]}`
-                : `1px solid ${theme.colors.darktheme[2]}`
+                ? `1px solid ${theme.colors.dark[4]}`
+                : `1px solid ${theme.colors.dark[2]}`
               : focused
-              ? `1px solid ${theme.colors.lighttheme[3]}`
-              : `1px solid ${theme.colors.lighttheme[1]}`,
+              ? `1px solid ${theme.colors.gray[3]}`
+              : `1px solid ${theme.colors.gray[1]}`,
           paddingRight: "3rem",
           width: "25rem",
           borderRadius: "10px",
@@ -213,6 +203,24 @@ const UserContainer = ({ classes, dispatch }) => {
   const [opened, handlers] = useDisclosure(false);
   const theme = useMantineTheme();
 
+  const handleLogout = async () => {
+    try {
+      console.log('Attempting to logout...');
+      // Use userRequest instead of publicRequest to include auth token
+      await userRequest.post('/auth/logout');
+      console.log('Logout successful');
+      dispatch(LogoutUser());
+      // Force reload the page to clear any remaining state
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still logout locally even if server call fails
+      dispatch(LogoutUser());
+      // Force reload the page to clear any remaining state
+      window.location.reload();
+    }
+  };
+
   return (
     <Menu
       opened={opened}
@@ -225,21 +233,21 @@ const UserContainer = ({ classes, dispatch }) => {
             background:
               theme.colorScheme === "dark"
                 ? opened
-                  ? theme.colors.darktheme[0]
-                  : theme.colors.darktheme[2]
+                  ? theme.colors.dark[0]
+                  : theme.colors.dark[2]
                 : opened
-                ? theme.colors.darktheme[0]
-                : theme.colors.lighttheme[1],
+                ? theme.colors.dark[0]
+                : theme.colors.gray[0],
             color: opened
-              ? theme.colors.lighttheme[0]
-              : theme.colors.darktheme[0],
+              ? theme.colors.gray[0]
+              : theme.colors.dark[7],
             width: "100px",
             border: "none",
             transition: `ease-in-out 500ms`,
 
             "&:hover": {
-              color: theme.colors.lighttheme[0],
-              background: theme.colors.darktheme[0],
+              color: theme.colors.gray[0],
+              background: theme.colors.green[6],
             },
           })}
           radius="xl"
@@ -253,9 +261,7 @@ const UserContainer = ({ classes, dispatch }) => {
         <Menu.Item
           className={classes.menuItem}
           icon={<Logout size={25} strokeWidth={2} />}
-          onClick={() => {
-            dispatch(LogoutUser());
-          }}
+          onClick={handleLogout}
         >
           logout
         </Menu.Item>

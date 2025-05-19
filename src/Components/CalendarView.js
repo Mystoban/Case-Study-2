@@ -47,51 +47,113 @@ const useStyles = createStyles((theme) => ({
 const CalendarView = () => {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
-  const [dateData, setDateData] = useState({});
-  const [eventData, setEventData] = useState(null);
+  const [dateData, setDateData] = useState(null);
+  const [eventData, setEventData] = useState("");
   const [eventAboutData, setEventAboutData] = useState("");
-  const [createEventModal, setcreateEventModal] = useState(false);
-  const [eventDataEnd, seteventDataEnd] = useState("");
-  const [eventID, seteventID] = useState(null);
+  const [createEventModal, setCreateEventModal] = useState(false);
+  const [eventDataEnd, setEventDataEnd] = useState(null);
+  const [eventID, setEventID] = useState(null);
   const dispatch = useDispatch();
   const events = useSelector((state) => state.events.events);
 
+  // Transform events to include _id as the event id
+  const calendarEvents = events.map(event => ({
+    ...event,
+    id: event._id, // Set the event id to be the MongoDB _id
+  }));
+
   const handleDateSelect = (selectInfo) => {
-    setcreateEventModal(true);
     setDateData(selectInfo.startStr);
+    setEventDataEnd(null);
+    setEventData("");
+    setEventAboutData("");
+    setCreateEventModal(true);
   };
 
   const handleDateClick = (e) => {
-    setEventData(e.event.title);
-    setDateData(e.event.start);
-    setEventAboutData(e.event.extendedProps.about);
-    seteventDataEnd(e.event.end);
-    seteventID(e.event.id);
-    setOpened(true);
+    const eventId = e.event.id; // Get the MongoDB _id we set earlier
+    const event = events.find(evt => evt._id === eventId); // Find the full event object
+    
+    if (event) {
+      setEventData(event.title);
+      setDateData(event.start);
+      setEventAboutData(event.about);
+      setEventDataEnd(event.end);
+      setEventID(event._id);
+      setOpened(true);
+    } else {
+      showNotification({
+        title: "Error",
+        message: "Could not find event details",
+        color: "red"
+      });
+    }
   };
 
-  const handlecreateevent = () => {
+  const handleDeleteEvent = async () => {
+    if (!eventID) {
+      showNotification({
+        title: "Error",
+        message: "Cannot delete event: Missing event ID",
+        color: "red"
+      });
+      return;
+    }
+
+    try {
+      await DeleteSingleEvent(
+        dispatch,
+        eventID,
+        showNotification,
+        setOpened,
+        eventData
+      );
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "Failed to delete event",
+        color: "red"
+      });
+    }
+  };
+
+  const handleCreateEvent = () => {
+    if (!eventData) {
+      showNotification({
+        title: "Error",
+        message: "Event name is required",
+        color: "red"
+      });
+      return;
+    }
+
+    if (!eventDataEnd) {
+      showNotification({
+        title: "Error",
+        message: "End date is required",
+        color: "red"
+      });
+      return;
+    }
+
     const input = {
       title: eventData,
       about: eventAboutData,
       start: dateData,
-      end: dayjs(eventDataEnd).add(1, 'day').format('YYYY-MM-DD'),
+      end: dayjs(eventDataEnd).format('YYYY-MM-DD'),
     };
 
-    CreateBrgyEvent(dispatch, input, showNotification, setcreateEventModal);
+    CreateBrgyEvent(dispatch, input, showNotification, setCreateEventModal);
   };
-
- 
 
   return (
     <div>
       <FullCalendar
-        events={events}
+        events={calendarEvents}
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         height={650}
-        eventClick={(e) => handleDateClick(e)} // For user to view the details of the event
-        // eventClick={handleDeleteEvent} // For Admin to delete the event
+        eventClick={handleDateClick}
         selectable={true}
         select={handleDateSelect}
       />
@@ -104,20 +166,12 @@ const CalendarView = () => {
         <Text>What: {eventData}</Text>
         <Text>About: {eventAboutData || "none"}</Text>
         <Text>Start of event: {dayjs(dateData).format("dddd, MMMM D")}</Text>
-        <Text>End of event: {dayjs(eventDataEnd).subtract(1, 'day').format("dddd, MMM D ")}</Text>
-        <Container fluid="true" className={classes.modal}>
+        <Text>End of event: {dayjs(eventDataEnd).subtract(1, 'day').format("dddd, MMM D")}</Text>
+        <Container fluid className={classes.modal}>
           <Button
             className={classes.deletebutton}
-            variant="unstyled"
-            onClick={()=>{
-              DeleteSingleEvent(
-                dispatch,
-                eventID,
-                showNotification,
-                setOpened,
-                eventData
-              );
-            }}
+            variant="filled"
+            onClick={handleDeleteEvent}
           >
             Delete
           </Button>
@@ -125,43 +179,49 @@ const CalendarView = () => {
       </Modal>
       <Modal
         opened={createEventModal}
-        onClose={() => setcreateEventModal(false)}
-        title="Create Events"
+        onClose={() => setCreateEventModal(false)}
+        title="Create Event"
         centered
       >
-        <Container fluid="true" className={classes.modal}>
+        <Container fluid className={classes.modal}>
           <TextInput
             className={classes.textinputs}
             name="eventname"
             label="Name of Event"
             placeholder="Input the name of event"
             radius="sm"
+            value={eventData}
             onChange={(e) => setEventData(e.currentTarget.value)}
-          ></TextInput>
+            required
+          />
           <TextInput
             className={classes.textinputs}
             name="eventdescription"
             label="Description of Event (optional)"
             placeholder="Input the description of the event"
             radius="sm"
+            value={eventAboutData}
             onChange={(e) => setEventAboutData(e.currentTarget.value)}
-          ></TextInput>
+          />
           <TextInput
             className={classes.textinputs}
             value={dayjs(dateData).format("MMMM D, YYYY")}
             label="Start of the Event"
             disabled
-          ></TextInput>
+          />
           <DatePicker
             className={classes.textinputs}
             placeholder="Input the end day of event"
             label="End of the Event"
-            onChange={seteventDataEnd}
+            value={eventDataEnd}
+            onChange={setEventDataEnd}
+            required
+            minDate={dayjs(dateData).toDate()}
           />
           <Button
             className={classes.registerbutton}
             variant="filled"
-            onClick={handlecreateevent}
+            onClick={handleCreateEvent}
           >
             Create
           </Button>

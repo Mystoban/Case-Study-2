@@ -13,10 +13,9 @@ const useStyles = createStyles((theme) => ({
     height: "fit-content",
     borderRadius: `20px`,
     padding: '15px',
-    background:
-      theme.colorScheme === "dark"
-        ? theme.colors.darktheme[5]
-        : theme.colors.lighttheme[0],
+    background: theme.colorScheme === "dark"
+      ? theme.colors.dark[7]
+      : theme.white,
     transition: "ease-in-out 500ms",
   },
 }));
