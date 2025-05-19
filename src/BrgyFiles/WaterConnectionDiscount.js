@@ -13,7 +13,7 @@ import { Container, TextInput, createStyles } from "@mantine/core";
 import OpenSansRegular from "../fonts/OpenSans-Regular.ttf";
 import OpenSansBold from "../fonts/OpenSans-Bold.ttf";
 import LucidaCalligraphy from "../fonts/Lucida Calligraphy Font.ttf";
-import Logo from "../images/BRGY_KALILANGAN - Logo.png";
+import Logo from "../images/brgy_kalilangan_logo.png";
 import { useSelector } from "react-redux";
 import { AdditionInputs } from "../Components";
 
