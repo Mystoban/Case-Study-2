@@ -22,13 +22,29 @@ npm install
 ```
 
 3. Set up environment variables:
-   - Copy `backend/.env.example` to `backend/.env`
-   - Update the following variables in `backend/.env`:
-     ```
-     MONGODB_URI=your_mongodb_connection_string
-     JWT_SECRET=your_secret_key
-     ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001
-     ```
+   Create a `.env` file in the `backend` directory with the following content:
+   ```
+   # Server Configuration
+   PORT=5001
+
+   # MongoDB Connection
+   MONGODB_URI=mongodb://localhost:27017/barangay_management
+
+   # JWT Configuration
+   JWT_SECRET=your_jwt_secret_key_here
+
+   # CORS Configuration
+   ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001
+
+   # Default Admin Credentials
+   DEFAULT_ADMIN_USERNAME=admin
+   DEFAULT_ADMIN_PASSWORD=admin123
+   ```
+
+   Important notes:
+   - If using MongoDB Atlas, replace MONGODB_URI with your Atlas connection string
+   - Use the same JWT_SECRET across all installations
+   - Add your frontend URL to ALLOWED_ORIGINS if different from default
 
 4. Start the backend server:
 ```bash
@@ -39,28 +55,6 @@ npm start
 5. In a new terminal, start the frontend:
 ```bash
 npm run electron-react
-```
-
-## Environment Variables
-
-Create a `.env` file in the `backend` directory with the following variables:
-
-```
-# Server Configuration
-PORT=5001
-
-# MongoDB Connection
-MONGODB_URI=mongodb://localhost:27017/barangay_management
-
-# JWT Configuration
-JWT_SECRET=your_jwt_secret_key_here
-
-# CORS Configuration
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001
-
-# Default Admin Credentials (change these in production)
-DEFAULT_ADMIN_USERNAME=admin
-DEFAULT_ADMIN_PASSWORD=admin123
 ```
 
 ## Available Scripts
@@ -97,4 +91,5 @@ If you encounter any issues:
 - Change the default admin credentials in production
 - Use a strong JWT_SECRET
 - Restrict ALLOWED_ORIGINS to only necessary domains
-- Use HTTPS in production 
+- Use HTTPS in production
+- Never commit the `.env` file to version control 
