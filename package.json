@@ -76,7 +76,11 @@
     "lint": "eslint 'src/**/*.{js,jsx}' --fix",
     "format": "prettier --write 'src/**/*.{js,jsx,css,scss}'",
     "storybook": "start-storybook",
-    "deploy-storybook": "storybook-to-ghpages"
+    "deploy-storybook": "storybook-to-ghpages",
+    "postinstall": "electron-builder install-app-deps",
+    "package": "electron-builder build --win --publish never",
+    "package-mac": "electron-builder build --mac --publish never",
+    "package-linux": "electron-builder build --linux --publish never"
   },
   "eslintConfig": {
     "extends": [
