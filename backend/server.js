@@ -26,13 +26,21 @@ async function startServer() {
     await ensureAdminUser();
     console.log('Admin user check completed');
 
+    // Parse allowed origins from environment variable
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5001').split(',');
+
     // Middleware
     app.use(cors({
-      origin: [
-        'http://localhost:3000',
-        'http://localhost:5001',
-        'http://192.168.1.27:3000'  // Add the IP address
-      ],
+      origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) === -1) {
+          console.log('Blocked by CORS:', origin);
+          return callback(new Error('Not allowed by CORS'), false);
+        }
+        return callback(null, true);
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization']
@@ -94,7 +102,7 @@ async function startServer() {
     });
 
     // Start server
-    const PORT = 5001;
+    const PORT = process.env.PORT || 5001;
     app.listen(PORT, () => {
       console.log(`\nServer is running on port ${PORT}`);
       console.log(`API is accessible at http://localhost:${PORT}/api`);
@@ -110,16 +118,16 @@ async function startServer() {
 // Create default admin if not exists
 async function ensureAdminUser() {
   try {
-    const adminExists = await User.findOne({ username: 'admin' });
+    const adminExists = await User.findOne({ username: process.env.DEFAULT_ADMIN_USERNAME || 'admin' });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const hashedPassword = await bcrypt.hash(process.env.DEFAULT_ADMIN_PASSWORD || 'admin123', 10);
       await User.create({
-        username: 'admin',
+        username: process.env.DEFAULT_ADMIN_USERNAME || 'admin',
         password: hashedPassword,
         fullname: 'System Administrator',
         role: 'admin'
       });
-      console.log('Default admin user created: username=admin, password=admin123');
+      console.log(`Default admin user created: username=${process.env.DEFAULT_ADMIN_USERNAME || 'admin'}, password=${process.env.DEFAULT_ADMIN_PASSWORD || 'admin123'}`);
     } else {
       console.log('Admin user already exists.');
     }

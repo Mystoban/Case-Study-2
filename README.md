@@ -6,6 +6,7 @@ This is an Electron + React application that provides a management system interf
 
 - Node.js (v14 or higher)
 - npm (comes with Node.js)
+- MongoDB (local installation or MongoDB Atlas account)
 
 ## Quick Start
 
@@ -15,19 +16,51 @@ git clone <repository-url>
 cd <repository-name>
 ```
 
-2. The dependencies will be automatically installed after cloning. If they don't install automatically, run:
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. To start the application in development mode:
+3. Set up environment variables:
+   - Copy `backend/.env.example` to `backend/.env`
+   - Update the following variables in `backend/.env`:
+     ```
+     MONGODB_URI=your_mongodb_connection_string
+     JWT_SECRET=your_secret_key
+     ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001
+     ```
+
+4. Start the backend server:
+```bash
+cd backend
+npm start
+```
+
+5. In a new terminal, start the frontend:
 ```bash
 npm run electron-react
 ```
 
-4. To build the application for production:
-```bash
-npm run build
+## Environment Variables
+
+Create a `.env` file in the `backend` directory with the following variables:
+
+```
+# Server Configuration
+PORT=5001
+
+# MongoDB Connection
+MONGODB_URI=mongodb://localhost:27017/barangay_management
+
+# JWT Configuration
+JWT_SECRET=your_jwt_secret_key_here
+
+# CORS Configuration
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001
+
+# Default Admin Credentials (change these in production)
+DEFAULT_ADMIN_USERNAME=admin
+DEFAULT_ADMIN_PASSWORD=admin123
 ```
 
 ## Available Scripts
@@ -50,7 +83,18 @@ npm run build
 
 If you encounter any issues:
 
-1. Make sure you have Node.js installed (v14 or higher)
-2. Delete the `node_modules` folder and `package-lock.json`
-3. Run `npm install` again
-4. If the issue persists, try clearing npm cache: `npm cache clean --force` 
+1. Make sure MongoDB is running and accessible
+2. Check that all environment variables are properly set
+3. Ensure the JWT_SECRET is the same across all installations
+4. Verify that the ALLOWED_ORIGINS includes your frontend URL
+5. If you get authentication errors:
+   - Clear your browser's local storage
+   - Log out and log back in
+   - Check the backend console for detailed error messages
+
+## Security Notes
+
+- Change the default admin credentials in production
+- Use a strong JWT_SECRET
+- Restrict ALLOWED_ORIGINS to only necessary domains
+- Use HTTPS in production 
